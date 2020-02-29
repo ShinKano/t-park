@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">T-PARK</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="新規登録はこちら">新規登録はこちら</string>
+    <string name="ログインはこちら">ログインはこちら</string>
+    <string name="Email">Email</string>
+    <string name="Password">Password</string>
+
+</resources>
