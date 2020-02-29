@@ -11,10 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.t_park.functions.HttpRequest;
 
-import org.json.JSONObject;
-
 import java.util.HashMap;
-import java.util.Map;
 
 
 public class LoginFragment extends Fragment {
@@ -26,7 +23,6 @@ public class LoginFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
-
     // Viewが生成し終わった時に呼ばれるメソッド
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
@@ -35,22 +31,23 @@ public class LoginFragment extends Fragment {
         // 要素の取得
         final EditText emailET = view.findViewById(R.id.input_email);
         final EditText passwordET = view.findViewById(R.id.input_password);
+        final Button loginButton = view.findViewById(R.id.login_button);
 
-        Button moveToRegisterButton = view.findViewById(R.id.login_button);
         // Buttonのクリックした時の処理を書きます
-        moveToRegisterButton.setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // フォーム内の値を取得
                 final String email    = editTextToString(emailET);
                 final String password = editTextToString(passwordET);
+
                 //HashMapの作成
                 final HashMap<String, String> map = new HashMap<String, String>() {
                     { put("mail",     email);
                       put("password", password);
-                      put("purpose", "login"); }
+                      put("purpose", "login"); } // AsyncTaskの実行内容を指定
                 };
-
+                // 非同期処理の実行
                 new HttpRequest().execute(map);
             }
         });

@@ -7,5 +7,14 @@
     <string name="ログインはこちら">ログインはこちら</string>
     <string name="Email">Email</string>
     <string name="Password">Password</string>
+    <string name="name">Name</string>
+    <string name="Sex">Gender</string>
+    <string name="ログイン">ログイン</string>
+    <string name="登録する">登録する</string>
+    <string-array name="性別">
+        <item>男性</item>
+        <item>女性</item>
+        <item>その他</item>
+    </string-array>
 
 </resources>
