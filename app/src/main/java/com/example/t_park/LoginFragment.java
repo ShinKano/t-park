@@ -1,5 +1,7 @@
 package com.example.t_park;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,16 +9,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.t_park.functions.HttpRequest;
+import com.example.t_park.functions.SharedPreference;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
 
 public class LoginFragment extends Fragment {
+
+
 
     // Fragmentで表示するViewを作成するメソッド
     @Override
@@ -30,7 +37,9 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 要素の取得
+        // 親要素の取得
+        final Context parentContext = getContext();
+        // 画面要素の取得
         final EditText emailET = view.findViewById(R.id.input_email);
         final EditText passwordET = view.findViewById(R.id.input_password);
         final Button loginButton = view.findViewById(R.id.login_button);
@@ -52,20 +61,27 @@ public class LoginFragment extends Fragment {
 
                 // 非同期処理の実行
                 HttpRequest httpRequest = new HttpRequest(new HttpRequest.AsyncTaskCallback() {
+                    // 非同期処理の前にやる事あれば書く
                     public void preExecute() {
-                        // 非同期処理の前にやる事あれば書く
+
                     }
 
-                    public void postExecute(JSONObject responseJSON) {
-                        System.out.println("非同期処理かんりょう！");
-                        System.out.println(responseJSON);
+                    // 非同期処理完了後の処理
+                    public void postExecute(Bundle responseBundle) {
+                        if (responseBundle.getInt("code") == 200) {
+                            new SharedPreference().saveUser(parentContext, responseBundle);
+                        } else {
+                            // レスポンスにエラーメッセージが含まれる場合はログに出力する
+                            System.out.println(responseBundle.getString("errorMessage"));
+                        }
                     }
 
+                    // キャンセル時にやる事あれば書く
                     public void cancel() {
-                        // キャンセル時にやる事あれば書く
+
                     }
                 });
-                httpRequest.execute(map); // 実行
+                httpRequest.execute(map);
             }
         });
 

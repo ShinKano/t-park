@@ -1,5 +1,6 @@
 package com.example.t_park;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +12,12 @@ import android.widget.Spinner;
 import androidx.fragment.app.Fragment;
 
 import com.example.t_park.functions.HttpRequest;
+import com.example.t_park.functions.SharedPreference;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.invoke.ConstantCallSite;
 import java.util.HashMap;
 
 
@@ -44,6 +48,7 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // 要素を取得
+                final Context parentContext = getContext();
                 final String email    = editTextToString(emailET);
                 final String password = editTextToString(passwordET);
                 final String name     = editTextToString(nameET);
@@ -64,9 +69,14 @@ public class RegisterFragment extends Fragment {
 
                     }
 
-                    @Override
-                    public void postExecute(JSONObject responseJSON) {
-
+                    // 非同期処理完了後の処理
+                    public void postExecute(Bundle responseBundle) {
+                        if (responseBundle.getInt("code") == 200) {
+                            new SharedPreference().saveUser(parentContext, responseBundle);
+                        } else {
+                            // レスポンスにエラーメッセージが含まれる場合はログに出力する
+                            System.out.println(responseBundle.getString("errorMessage"));
+                        }
                     }
 
                     @Override

@@ -4,14 +4,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 public class SharedPreference {
 
-    public void saveUser(Context mContext, Bundle result) {
-        SharedPreferences userInfo = mContext.getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
+    public void saveUser(Context context, Bundle responseBundle) {
+        SharedPreferences userInfo = context.getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = userInfo.edit();
-        editor.putString("id", result.getString("id"));
-        editor.putString("name", result.getString("name"));
-        editor.putString("sex", result.getString("sex"));
+        editor.putString("id", responseBundle.getString("id"));
+        editor.putString("name", responseBundle.getString("name"));
+        editor.putString("sex", responseBundle.getString("sex"));
         editor.commit();
 
         String infoName = userInfo.getString("name", "");

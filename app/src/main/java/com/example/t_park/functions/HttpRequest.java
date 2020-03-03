@@ -1,6 +1,7 @@
 package com.example.t_park.functions;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,12 +18,12 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 
-public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, JSONObject> {
+public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, Bundle> {
 
     // =======Activityへのコールバック用interface=======
     public interface AsyncTaskCallback {
         void preExecute();
-        void postExecute(JSONObject responseJSON);
+        void postExecute(Bundle responseBundle);
         void cancel();
     }
 
@@ -45,9 +46,9 @@ public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, JSONOb
     }
 
     @Override
-    protected void onPostExecute(JSONObject responseJSON) {
-        super.onPostExecute(responseJSON);
-        callback.postExecute(responseJSON);
+    protected void onPostExecute(Bundle responseBundle) {
+        super.onPostExecute(responseBundle);
+        callback.postExecute(responseBundle);
     }
 
     // ======================================
@@ -56,20 +57,20 @@ public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, JSONOb
 
 
     @Override // doInBackgroundの引数でなぜか一回Arrayに入る
-    protected JSONObject doInBackground(HashMap<String,String>... map ) {
+    protected Bundle doInBackground(HashMap<String,String>... map ) {
 
-        JSONObject responseJSON = null;
+        Bundle responseBundle = null;
 
         try {
             // purposeによってAsyncTaskの実行内容を分岐
             switch (map[0].get("purpose")){
 
                 case "login":
-                    responseJSON = postRequest(map[0], "http://10.0.2.2:3000/api/users/auth/");
+                    responseBundle = postRequest(map[0], "http://10.0.2.2:3000/api/users/auth/");
                     break;
 
                 case "register":
-                     responseJSON =postRequest(map[0], "http://10.0.2.2:3000/api/users/");
+                    responseBundle = postRequest(map[0], "http://10.0.2.2:3000/api/users/");
                     break;
 
                 default:
@@ -77,10 +78,10 @@ public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, JSONOb
                     return null;
             }
 
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-        return responseJSON;
+        return responseBundle;
     }
 
 
@@ -91,7 +92,7 @@ public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, JSONOb
     private final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     // POSTリクエスト：POSTボディに含めるHashMapとURLを引数にとる
-    private JSONObject postRequest(HashMap<String,String> map ,String url) throws IOException {
+    private Bundle postRequest(HashMap<String,String> map , String url) throws IOException, JSONException {
         OkHttpClient client = new OkHttpClient();
         // マップからJSONに変換
         JSONObject json = new JSONObject(map);
@@ -117,7 +118,18 @@ public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, JSONOb
         System.out.println(response.toString());
         System.out.println(response.code());
 
-        return responseJSON;
+        Bundle responseBundle = new Bundle();
+        if (response.code() == 200) {
+            responseBundle.putInt("code", response.code());
+            responseBundle.putString("id", responseJSON.getString("id"));
+            responseBundle.putString("name", responseJSON.getString("name"));
+            responseBundle.putString("sex", responseJSON.getString("sex"));
+        } else {
+            responseBundle.putInt("code", response.code());
+            responseBundle.putString("errorMessage", responseJSON.getString("errorMessage"));
+        }
+        System.out.println(responseBundle);
+        return responseBundle;
     }
 
 }
