@@ -14,8 +14,10 @@ public class MainActivity extends AppCompatActivity {
     // 画面ステータス
     boolean isLoginPage = true; // ? ログイン:レジスター
     Context context = this;
+
     // 画面の要素
     Button loginOrRegisterButton;
+
     // フラグメントインスタンス
     Fragment loginFragment = new LoginFragment();
     Fragment registerFragment = new RegisterFragment();

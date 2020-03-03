@@ -2,6 +2,7 @@ package com.example.t_park.functions;
 
 import android.os.AsyncTask;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -16,41 +17,81 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 
-public class HttpRequest extends AsyncTask< HashMap<String,String>, Void, Void > {
+public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, JSONObject> {
 
-    // RequestBodyインスタンスの作成に必要
-    private final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+    // =======Activityへのコールバック用interface=======
+    public interface AsyncTaskCallback {
+        void preExecute();
+        void postExecute(JSONObject responseJSON);
+        void cancel();
+    }
+
+    private AsyncTaskCallback callback = null;
+
+    public HttpRequest(AsyncTaskCallback _callback) {
+        this.callback = _callback;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        callback.preExecute();
+    }
+
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        callback.cancel();
+    }
+
+    @Override
+    protected void onPostExecute(JSONObject responseJSON) {
+        super.onPostExecute(responseJSON);
+        callback.postExecute(responseJSON);
+    }
+
+    // ======================================
+
+
 
 
     @Override // doInBackgroundの引数でなぜか一回Arrayに入る
-    protected Void doInBackground( HashMap<String,String>... map ) {
-        System.out.println(map[0].get("purpose")); // AsyncTaskの実行内容を指定
+    protected JSONObject doInBackground(HashMap<String,String>... map ) {
+
+        JSONObject responseJSON = null;
+
         try {
+            // purposeによってAsyncTaskの実行内容を分岐
             switch (map[0].get("purpose")){
 
                 case "login":
-                    postRequest(map[0], "http://10.0.2.2:3000/api/users/auth/");
+                    responseJSON = postRequest(map[0], "http://10.0.2.2:3000/api/users/auth/");
                     break;
 
                 case "register":
-                    postRequest(map[0], "http://10.0.2.2:3000/api/users/");
+                     responseJSON =postRequest(map[0], "http://10.0.2.2:3000/api/users/");
                     break;
 
-                default: System.out.println("エラー");
+                default:
+                    System.out.println("エラー");
+                    return null;
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return responseJSON;
     }
-
 
 
 
     // =======リクエスト用関数の記述=======
 
-    private Void postRequest(HashMap<String,String> map ,String url) throws IOException {
+    // RequestBodyインスタンスの作成に必要
+    private final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+    // POSTリクエスト：POSTボディに含めるHashMapとURLを引数にとる
+    private JSONObject postRequest(HashMap<String,String> map ,String url) throws IOException {
         OkHttpClient client = new OkHttpClient();
         // マップからJSONに変換
         JSONObject json = new JSONObject(map);
@@ -61,13 +102,22 @@ public class HttpRequest extends AsyncTask< HashMap<String,String>, Void, Void >
                 .post(requestBody)
                 .build();
         Call call = client.newCall(request);
+        // Callの実行
         Response response = call.execute();
         ResponseBody body = response.body();
-        System.out.println(body);
+        // ResponseをJSONに変換
+        JSONObject responseJSON = null;
+        try {
+            responseJSON = new JSONObject(body.string());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // ログの出力
+        System.out.println(responseJSON);
         System.out.println(response.toString());
         System.out.println(response.code());
 
-        return null;
+        return responseJSON;
     }
 
 }

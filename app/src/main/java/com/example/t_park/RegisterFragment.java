@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.t_park.functions.HttpRequest;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 
@@ -37,17 +39,17 @@ public class RegisterFragment extends Fragment {
         final Spinner sexSpinner = view.findViewById(R.id.input_sex);
         final Button registerButton = view.findViewById(R.id.register_button);
 
-        // Buttonのクリックした時の処理を書きます
+        // Buttonのクリックした時の処理
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // フォーム内の値を取得
+                // 要素を取得
                 final String email    = editTextToString(emailET);
                 final String password = editTextToString(passwordET);
                 final String name     = editTextToString(nameET);
                 final String sex      = (String)sexSpinner.getSelectedItem();
 
-                //HashMapの作成
+                // HashMapの作成
                 final HashMap<String, String> map = new HashMap<String, String>() {
                     { put("mail",     email);
                       put("password", password);
@@ -56,14 +58,30 @@ public class RegisterFragment extends Fragment {
                       put("purpose",  "register"); } // AsyncTaskの実行内容を指定
                 };
                 // 非同期処理の実行
-                new HttpRequest().execute(map);
+                HttpRequest httpRequest = new HttpRequest(new HttpRequest.AsyncTaskCallback() {
+                    @Override
+                    public void preExecute() {
+
+                    }
+
+                    @Override
+                    public void postExecute(JSONObject responseJSON) {
+
+                    }
+
+                    @Override
+                    public void cancel() {
+
+                    }
+                });
+                httpRequest.execute(map);
             }
         });
 
     }
 
 
-    public String editTextToString(EditText editText) {
+    private String editTextToString(EditText editText) {
         return editText.getText().toString();
     }
 }

@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.t_park.functions.HttpRequest;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 
@@ -47,20 +49,32 @@ public class LoginFragment extends Fragment {
                       put("password", password);
                       put("purpose", "login"); } // AsyncTaskの実行内容を指定
                 };
+
                 // 非同期処理の実行
-                new HttpRequest().execute(map);
+                HttpRequest httpRequest = new HttpRequest(new HttpRequest.AsyncTaskCallback() {
+                    public void preExecute() {
+                        // 非同期処理の前にやる事あれば書く
+                    }
+
+                    public void postExecute(JSONObject responseJSON) {
+                        System.out.println("非同期処理かんりょう！");
+                        System.out.println(responseJSON);
+                    }
+
+                    public void cancel() {
+                        // キャンセル時にやる事あれば書く
+                    }
+                });
+                httpRequest.execute(map); // 実行
             }
         });
 
     }
 
 
-
-    public String editTextToString(EditText editText) {
+    private String editTextToString(EditText editText) {
         return editText.getText().toString();
     }
-
-
 
 
 
