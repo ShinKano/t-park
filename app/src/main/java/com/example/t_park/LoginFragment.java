@@ -1,6 +1,5 @@
 package com.example.t_park;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,20 +8,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.t_park.functions.HttpRequest;
 import com.example.t_park.functions.SharedPreference;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 
 
 public class LoginFragment extends Fragment {
-
 
 
     // Fragmentで表示するViewを作成するメソッド
@@ -70,6 +64,8 @@ public class LoginFragment extends Fragment {
                     public void postExecute(Bundle responseBundle) {
                         if (responseBundle.getInt("code") == 200) {
                             new SharedPreference().saveUser(parentContext, responseBundle);
+                            replaceFragment(new RegisterFragment());
+
                         } else {
                             // レスポンスにエラーメッセージが含まれる場合はログに出力する
                             System.out.println(responseBundle.getString("errorMessage"));
@@ -92,6 +88,10 @@ public class LoginFragment extends Fragment {
         return editText.getText().toString();
     }
 
-
+    // MainActivityからFragment切り替えを呼び出す
+    private void replaceFragment(Fragment fragment) {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.replaceFragment(fragment);
+    }
 
 }

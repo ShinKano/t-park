@@ -64,7 +64,7 @@ public class RegisterFragment extends Fragment {
                 };
                 // 非同期処理の実行
                 HttpRequest httpRequest = new HttpRequest(new HttpRequest.AsyncTaskCallback() {
-                    @Override
+                    // 非同期処理前
                     public void preExecute() {
 
                     }
@@ -73,13 +73,14 @@ public class RegisterFragment extends Fragment {
                     public void postExecute(Bundle responseBundle) {
                         if (responseBundle.getInt("code") == 200) {
                             new SharedPreference().saveUser(parentContext, responseBundle);
+                            replaceFragment(new LoginFragment());
                         } else {
                             // レスポンスにエラーメッセージが含まれる場合はログに出力する
                             System.out.println(responseBundle.getString("errorMessage"));
                         }
                     }
 
-                    @Override
+                    // キャンセル時の処理
                     public void cancel() {
 
                     }
@@ -93,5 +94,11 @@ public class RegisterFragment extends Fragment {
 
     private String editTextToString(EditText editText) {
         return editText.getText().toString();
+    }
+
+    // MainActivityからFragment切り替えを呼び出す
+    private void replaceFragment(Fragment fragment) {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.replaceFragment(fragment);
     }
 }
