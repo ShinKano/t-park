@@ -19,20 +19,18 @@ public class MainActivity extends AppCompatActivity {
     Fragment registerFragment = new RegisterFragment();
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        // 条件に合ったFragmentとButtonテキストを設定
+        // 条件に合ったFragmentを設定
         replaceFragment(isLoginPage ? loginFragment :registerFragment);
 
     }
 
 
-    // フラグメントの切り替え
+    // フラグメントの切り替え（呼び出し先のフラグメントでも呼び出されるので注意！）
     public void replaceFragment(Fragment fragment) {
         // FragmentTransactionを生成して処理を開始
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -44,6 +42,5 @@ public class MainActivity extends AppCompatActivity {
     public Boolean switchBoolean(Boolean status) {
         return !status;
     }
-
 
 }
