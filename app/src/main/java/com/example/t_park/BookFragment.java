@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 
@@ -37,34 +38,20 @@ public class BookFragment extends Fragment {
         // 画面要素の取得
         final EditText startTimeET = view.findViewById(R.id.input_start_time);
         final EditText endTimeET = view.findViewById(R.id.input_end_time);
+        final Button bookButton = view.findViewById(R.id.book_button);
 
 
+        // startTime入力フォームにフォーカスで発火
         startTimeET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    //受け取った時
-                    System.out.println("くりいいいい");
-                    MainActivity mainActivity = (MainActivity) getActivity();
-                    mainActivity.showTimePicker(startTimeET);
-
-                } else {
-                    //離れた時に何かあれば記述！
-                }
+                if (hasFocus) setTimeFromTimePicker(startTimeET);
             }
         });
 
-
+        // endTime入力フォームにフォーカスで発火
         endTimeET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    //受け取った時
-                    System.out.println("くりいいいい");
-                    MainActivity mainActivity = (MainActivity) getActivity();
-                    mainActivity.showTimePicker(endTimeET);
-
-                } else {
-                    //離れた時に何かあれば記述！
-                }
+                if (hasFocus) setTimeFromTimePicker(endTimeET);
             }
         });
 
@@ -74,6 +61,12 @@ public class BookFragment extends Fragment {
     private void replaceFragment(Fragment fragment) {
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.replaceFragment(fragment);
+    }
+
+    // MainActivityからTimePickerを呼び出す（入力フォームを引数に）
+    private void setTimeFromTimePicker(EditText editText) {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.showTimePicker(editText);
     }
 
 }
