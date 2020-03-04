@@ -37,8 +37,9 @@ public class LoginFragment extends Fragment {
         final EditText emailET = view.findViewById(R.id.input_email);
         final EditText passwordET = view.findViewById(R.id.input_password);
         final Button loginButton = view.findViewById(R.id.login_button);
+        final Button toRegisterButton = view.findViewById(R.id.to_register_button);
 
-        // Buttonのクリックした時の処理を書きます
+        // ログインボタンの処理
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +65,7 @@ public class LoginFragment extends Fragment {
                     public void postExecute(Bundle responseBundle) {
                         if (responseBundle.getInt("code") == 200) {
                             new SharedPreference().saveUser(parentContext, responseBundle);
-                            replaceFragment(new RegisterFragment());
+                            replaceFragment(new ScheduleFragment());
 
                         } else {
                             // レスポンスにエラーメッセージが含まれる場合はログに出力する
@@ -78,6 +79,16 @@ public class LoginFragment extends Fragment {
                     }
                 });
                 httpRequest.execute(map);
+            }
+        });
+
+
+
+        // 新規登録画面へ遷移するボタン
+        toRegisterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new RegisterFragment());
             }
         });
 

@@ -42,6 +42,7 @@ public class RegisterFragment extends Fragment {
         final EditText nameET = view.findViewById(R.id.input_name);
         final Spinner sexSpinner = view.findViewById(R.id.input_sex);
         final Button registerButton = view.findViewById(R.id.register_button);
+        final Button toLoginButton = view.findViewById(R.id.to_login_button);
 
         // Buttonのクリックした時の処理
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +87,15 @@ public class RegisterFragment extends Fragment {
                     }
                 });
                 httpRequest.execute(map);
+            }
+        });
+
+
+        // ログイン画面へ遷移するボタンの処理
+        toLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new LoginFragment());
             }
         });
 
