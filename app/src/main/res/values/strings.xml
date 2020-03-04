@@ -14,6 +14,9 @@
 
     <string name="登録する">登録する</string>
     <string name="予約する">予約する</string>
+    <string name="使用開始時刻">使用開始時刻</string>
+    <string name="使用終了時刻">使用終了時刻</string>
+
 
     <string-array name="性別">
         <item>男性</item>

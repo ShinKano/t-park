@@ -4,10 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
         // 条件に合ったFragmentを設定
         replaceFragment(isLoginPage ? loginFragment :registerFragment);
-
     }
+
 
 
     // フラグメントの切り替え（呼び出し先のフラグメントでも呼び出されるので注意！）
@@ -38,9 +36,16 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+    // TimePickerを表示する（呼び出し先のフラグメントでも呼び出されるので注意！）
+    public void showTimePicker(EditText editText) {
+        TimePickerDialogFragment timePicker = new TimePickerDialogFragment(editText);
+        timePicker.show(getSupportFragmentManager(), "timePicker");
+    }
+
     // 画面ステータスの切り替え
     public Boolean switchBoolean(Boolean status) {
         return !status;
     }
+
 
 }
