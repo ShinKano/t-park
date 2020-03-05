@@ -82,6 +82,10 @@ public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, Bundle
                     responseBundle = getRequest("http://10.0.2.2:3000/api/reserve");
                     break;
 
+                case "deleteSchedule":
+                    responseBundle = deleteRequest(map[0].get("targetId"),"http://10.0.2.2:3000/api/reserve/");
+                    break;
+
                 default:
                     System.out.println("エラーだよ");
                     return null;
@@ -182,9 +186,27 @@ public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, Bundle
     }
 
 
+    private Bundle deleteRequest(String targetId, String url) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url + targetId)
+                .delete()
+                .build();
+        Call call = client.newCall(request);
+        // Callの実行
+        Response response = call.execute();
+        ResponseBody body = response.body();
 
-
-
+        // Bundleの準備
+        Bundle responseBundle = new Bundle();
+        if (response.code() == 204) {
+            responseBundle.putInt("code", response.code());
+        } else {
+            responseBundle.putInt("code", response.code());
+        }
+        System.out.println("これが最終的なReturn:" + responseBundle);
+        return responseBundle;
+    }
 
 }
 

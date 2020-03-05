@@ -3,8 +3,10 @@ package com.example.t_park;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
@@ -63,6 +65,7 @@ public class BookFragment extends Fragment {
         });
 
         toScheduleButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 replaceFragment(new ScheduleFragment());
@@ -98,6 +101,7 @@ public class BookFragment extends Fragment {
 
                     }
                     // 非同期処理完了後の処理
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     public void postExecute(Bundle responseBundle) {
                         if (responseBundle.getInt("code") == 200) {
                             // 予約完了ダイアログの表示
