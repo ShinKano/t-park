@@ -73,8 +73,11 @@ public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, Bundle
                     responseBundle = postRequest(map[0], "http://10.0.2.2:3000/api/users/");
                     break;
 
+                case "book":
+                    responseBundle = postRequest(map[0], "http://10.0.2.2:3000/api/reserve");
+                    break;
                 default:
-                    System.out.println("エラー");
+                    System.out.println("エラーだよ");
                     return null;
             }
 
@@ -122,8 +125,12 @@ public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, Bundle
         if (response.code() == 200) {
             responseBundle.putInt("code", response.code());
             responseBundle.putString("id", responseJSON.getString("id"));
-            responseBundle.putString("name", responseJSON.getString("name"));
-            responseBundle.putString("sex", responseJSON.getString("sex"));
+            responseBundle.putString("name", responseJSON.has("name")
+                    ? responseJSON.getString("name")
+                    : responseJSON.getString("userName"));
+            responseBundle.putString("sex", responseJSON.has("sex")
+                    ? responseJSON.getString("sex")
+                    : "No need when booking");
         } else {
             responseBundle.putInt("code", response.code());
             responseBundle.putString("errorMessage", responseJSON.getString("errorMessage"));

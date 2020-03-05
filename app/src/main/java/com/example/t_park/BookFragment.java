@@ -12,6 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.t_park.functions.HttpRequest;
+import com.example.t_park.functions.SharedPreference;
+
+import java.util.HashMap;
+
 
 public class BookFragment extends Fragment {
 
@@ -55,6 +60,55 @@ public class BookFragment extends Fragment {
             }
         });
 
+        // 予約ボタンの処理
+        bookButton.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 入力データの取得
+                final String startTime    = editTextToString(startTimeET);
+                final String endTime = editTextToString(endTimeET);
+
+                // ログインユーザー情報の取得
+                final Bundle userInfoBundle = new SharedPreference().getUserInfo(parentContext);
+                final String userId = userInfoBundle.getString("id");
+                final String userName = userInfoBundle.getString("name");
+
+                //HashMapの作成
+                final HashMap<String, String> map = new HashMap<String, String>() {
+                    { put("startTime", startTime);
+                      put("endTime",   endTime);
+                      put("userId",    userId);
+                      put("userName",  userName);
+                      put("purpose",   "book");  } // AsyncTaskの実行内容を指定
+                };
+
+                // 非同期処理の実行
+                HttpRequest httpRequest = new HttpRequest(new HttpRequest.AsyncTaskCallback() {
+                    // 非同期処理の前にやる事あれば書く
+                    public void preExecute() {
+
+                    }
+                    // 非同期処理完了後の処理
+                    public void postExecute(Bundle responseBundle) {
+//                        if (responseBundle.getInt("code") == 200) {
+//                            System.out.println("予約おっけー");
+//
+//                        } else {
+//                            // レスポンスにエラーメッセージが含まれる場合はログに出力する
+//                            System.out.println(responseBundle.getString("errorMessage"));
+//                        }
+                        System.out.println("なんども");
+                        System.out.println(responseBundle);
+                    }
+                    // キャンセル時にやる事あれば書く
+                    public void cancel() {
+
+                    }
+                });
+                httpRequest.execute(map);
+            }
+        }));
+
     }
 
     // MainActivityからFragment切り替えを呼び出す
@@ -67,6 +121,10 @@ public class BookFragment extends Fragment {
     private void setTimeFromTimePicker(EditText editText) {
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.showTimePicker(editText);
+    }
+
+    private String editTextToString(EditText editText) {
+        return editText.getText().toString();
     }
 
 }

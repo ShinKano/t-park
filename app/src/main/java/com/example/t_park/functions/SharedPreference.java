@@ -21,4 +21,14 @@ public class SharedPreference {
         String infoName = userInfo.getString("name", "");
         System.out.println(infoName + "はログイン状態です");
     }
+
+
+    public Bundle getUserInfo(Context context) {
+        SharedPreferences userInfo = context.getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
+        Bundle userInfoBundle = new Bundle();
+        userInfoBundle.putString("id", userInfo.getString("id", ""));
+        userInfoBundle.putString("name", userInfo.getString("name", ""));
+        // userInfoBundle.putString("sex", userInfo.getString("sex", ""));
+        return userInfoBundle;
+    }
 }
