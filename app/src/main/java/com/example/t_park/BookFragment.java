@@ -46,7 +46,7 @@ public class BookFragment extends Fragment {
         final EditText startTimeET = view.findViewById(R.id.input_start_time);
         final EditText endTimeET = view.findViewById(R.id.input_end_time);
         final Button bookButton = view.findViewById(R.id.book_button);
-
+        final Button toScheduleButton = view.findViewById(R.id.to_schedule_button);
 
         // startTime入力フォームにフォーカスで発火
         startTimeET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -59,6 +59,13 @@ public class BookFragment extends Fragment {
         endTimeET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) setTimeFromTimePicker(endTimeET);
+            }
+        });
+
+        toScheduleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new ScheduleFragment());
             }
         });
 

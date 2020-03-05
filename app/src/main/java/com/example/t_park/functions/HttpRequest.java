@@ -167,10 +167,10 @@ public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, Bundle
         // ログの出力
         System.out.println("これはhttpの中のログ" + arrayResponseJSON);
 
-
         Bundle responseBundle = new Bundle();
         if (response.code() == 200) {
             responseBundle.putInt("code", response.code());
+            //　Bundleに詰めるために一旦文字列に変換
             responseBundle.putString("book", arrayResponseJSON.toString());
 
         } else {

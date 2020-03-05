@@ -28,11 +28,6 @@ import java.util.HashMap;
 public class ScheduleFragment extends Fragment {
 
 
-    public ScheduleFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -76,24 +71,20 @@ public class ScheduleFragment extends Fragment {
             // 非同期処理完了後の処理
             public void postExecute(Bundle responseBundle) {
                 if (responseBundle.getInt("code") == 200) {
-                    System.out.println("予約一覧ゲットOK");
-                    System.out.println(responseBundle);
+                    // レスポンス内の予約一覧（文字列）を取得
                     String strJ = responseBundle.getString("book");
-                    System.out.println(strJ);
 
-                    try {
+                    try { // 文字列をJSONオブジェクトにに変換
                         JSONArray jArray = new JSONArray(strJ);
-                        System.out.println(jArray);
+                        // ListView展開のために配列化
                         JSONObject[] bookArray = new JSONObject[jArray.length()];
                         for (int i=0; i<jArray.length(); i++){
                             bookArray[i] = jArray.getJSONObject(i);
                         }
-
-
-                        System.out.println(bookArray);
-                        System.out.println(bookArray[0].getString("startTime"));
+                        // AdapterでListViewに展開
                         BookAdapter adapter = new BookAdapter(parentContext, R.layout.listitem_schedule, bookArray);
                         listView.setAdapter(adapter);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -111,19 +102,14 @@ public class ScheduleFragment extends Fragment {
             }
         });
         httpRequest.execute(map);
-
-
-
-
     }
+
 
     // MainActivityからFragment切り替えを呼び出す
     private void replaceFragment(Fragment fragment) {
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.replaceFragment(fragment);
     }
-
-
 
 
     //ArrayAdapterを継承したクラス
@@ -150,7 +136,7 @@ public class ScheduleFragment extends Fragment {
             TextView tvEnd = (TextView) convertView.findViewById(R.id.samplelist_text3);
 
             try {
-                tvName.setText(book.getString("userName"));
+                tvName.setText(book.getString("id"));
                 tvStart.setText(book.getString("startTime"));
                 tvEnd.setText(book.getString("endTime"));
 
