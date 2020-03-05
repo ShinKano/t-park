@@ -2,8 +2,10 @@ package com.example.t_park;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -90,15 +92,19 @@ public class BookFragment extends Fragment {
                     }
                     // 非同期処理完了後の処理
                     public void postExecute(Bundle responseBundle) {
-//                        if (responseBundle.getInt("code") == 200) {
-//                            System.out.println("予約おっけー");
-//
-//                        } else {
-//                            // レスポンスにエラーメッセージが含まれる場合はログに出力する
-//                            System.out.println(responseBundle.getString("errorMessage"));
-//                        }
-                        System.out.println("なんども");
-                        System.out.println(responseBundle);
+                        if (responseBundle.getInt("code") == 200) {
+                            // 予約完了ダイアログの表示
+                            AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
+                            builder.setMessage("予約が完了しました！");
+                            builder.show();
+                            // 予約一覧画面に遷移
+                            replaceFragment(new ScheduleFragment());
+
+                        } else {
+                            // レスポンスにエラーメッセージが含まれる場合はログに出力する
+                            System.out.println(responseBundle.getString("errorMessage"));
+                        }
+
                     }
                     // キャンセル時にやる事あれば書く
                     public void cancel() {

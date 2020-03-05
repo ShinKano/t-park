@@ -47,7 +47,7 @@ public class LoginFragment extends Fragment {
                 final String email    = editTextToString(emailET);
                 final String password = editTextToString(passwordET);
 
-                //HashMapの作成
+                //リクエスト用HashMapの作成
                 final HashMap<String, String> map = new HashMap<String, String>() {
                     { put("mail",     email);
                       put("password", password);

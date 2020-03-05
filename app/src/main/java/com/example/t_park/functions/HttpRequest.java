@@ -3,6 +3,7 @@ package com.example.t_park.functions;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -76,6 +77,11 @@ public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, Bundle
                 case "book":
                     responseBundle = postRequest(map[0], "http://10.0.2.2:3000/api/reserve");
                     break;
+
+                case "getSchedule":
+                    responseBundle = getRequest("http://10.0.2.2:3000/api/reserve");
+                    break;
+
                 default:
                     System.out.println("エラーだよ");
                     return null;
@@ -138,6 +144,47 @@ public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, Bundle
         System.out.println(responseBundle);
         return responseBundle;
     }
+
+
+    // GETリクエスト
+    private Bundle getRequest(String url) throws IOException, JSONException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        Call call = client.newCall(request);
+        // Callの実行
+        Response response = call.execute();
+        ResponseBody body = response.body();
+        // ResponseをJSONに変換
+        JSONArray arrayResponseJSON = null;
+        try {
+            arrayResponseJSON = new JSONArray(body.string());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // ログの出力
+        System.out.println("これはhttpの中のログ" + arrayResponseJSON);
+
+
+        Bundle responseBundle = new Bundle();
+        if (response.code() == 200) {
+            responseBundle.putInt("code", response.code());
+            responseBundle.putString("book", arrayResponseJSON.toString());
+
+        } else {
+            responseBundle.putInt("code", response.code());
+
+        }
+        System.out.println("これが最終的なReturn:" + responseBundle);
+        return responseBundle;
+    }
+
+
+
+
+
 
 }
 
