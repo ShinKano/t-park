@@ -1,32 +1,34 @@
 package com.example.t_park;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.EditText;
 
+import com.example.t_park.functions.SharedPreference;
+
 public class MainActivity extends AppCompatActivity {
 
-    // 画面ステータス
-    boolean isLoginPage = true; // ? ログイン:レジスター
 
-    // フラグメントインスタンス
-    Fragment loginFragment = new LoginFragment();
-    Fragment registerFragment = new RegisterFragment();
-
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.AppTheme);
+        setTheme(R.style.AppTheme); // Splashから通常Themeに戻す
         setContentView(R.layout.activity_main);
 
-        // 条件に合ったFragmentを設定
-        replaceFragment(isLoginPage ? loginFragment :registerFragment);
+        // SharedPreferenceにデータがあるかどうかでログインと登録画面どちらかに遷移
+        Bundle sharedPreference = new SharedPreference().getUserInfo(this);
+        replaceFragment(sharedPreference.getString("id").isEmpty()
+                ? new RegisterFragment()
+                : new ScheduleFragment()
+        );
     }
-
 
 
     // フラグメントの切り替え（呼び出し先のフラグメントでも呼び出されるので注意！）
@@ -41,11 +43,6 @@ public class MainActivity extends AppCompatActivity {
     public void showTimePicker(EditText editText) {
         TimePickerDialogFragment timePicker = new TimePickerDialogFragment(editText);
         timePicker.show(getSupportFragmentManager(), "timePicker");
-    }
-
-    // 画面ステータスの切り替え
-    public Boolean switchBoolean(Boolean status) {
-        return !status;
     }
 
 

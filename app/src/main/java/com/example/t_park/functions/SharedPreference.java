@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 
 public class SharedPreference {
 
@@ -30,5 +27,14 @@ public class SharedPreference {
         userInfoBundle.putString("name", userInfo.getString("name", ""));
         // userInfoBundle.putString("sex", userInfo.getString("sex", ""));
         return userInfoBundle;
+    }
+
+    public void deleteUserInfo(Context context) {
+        SharedPreferences userInfo = context.getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = userInfo.edit();
+        editor.remove("id");
+        editor.remove("name");
+        editor.remove("sex");
+        editor.commit();
     }
 }

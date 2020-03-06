@@ -10,7 +10,7 @@
     <string name="name">Name</string>
     <string name="Sex">Gender</string>
     <string name="ログイン">ログイン</string>
-    <string name="ログアウト">ログアウト</string>
+    <string name="ログアウト">Log Out</string>
 
     <string name="登録する">登録する</string>
     <string name="予約する">予約する</string>

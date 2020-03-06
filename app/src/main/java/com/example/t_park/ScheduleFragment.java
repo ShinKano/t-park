@@ -54,7 +54,18 @@ public class ScheduleFragment extends Fragment {
         final Context parentContext = getContext();
         // 画面要素の取得
         final Button toBookButton = view.findViewById(R.id.to_book_button);
+        final Button logOutButton = view.findViewById(R.id.logout_button);
         final ListView listView = (ListView) view.findViewById(R.id.schedule_list);
+
+
+        // ログアウトボタンの処理
+        logOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SharedPreference().deleteUserInfo(parentContext);
+                replaceFragment(new LoginFragment());
+            }
+        });
 
 
         // 予約画面に遷移ボタン
@@ -64,7 +75,6 @@ public class ScheduleFragment extends Fragment {
                 replaceFragment(new BookFragment());
             }
         });
-
 
         //リクエスト用HashMapの作成
         final HashMap<String, String> map = new HashMap<String, String>() {
@@ -149,8 +159,8 @@ public class ScheduleFragment extends Fragment {
 
             try {
                 tvName.setText(book.getString("userName"));
-                tvStart.setText(book.getString("startTime"));
-                tvEnd.setText(book.getString("endTime"));
+                tvStart.setText(book.getString("startTime").replace("2020-", ""));
+                tvEnd.setText(book.getString("endTime").replace("2020-", ""));
 
                 // 予約のidとSharedPreferenceのidが一致したら色づけする
                 if (book.getString("userId")

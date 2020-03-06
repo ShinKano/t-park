@@ -128,8 +128,6 @@ public class HttpRequest extends AsyncTask<HashMap<String, String>, Void, Bundle
         }
         // ログの出力
         System.out.println(responseJSON);
-        System.out.println(response.toString());
-        System.out.println(response.code());
 
         Bundle responseBundle = new Bundle();
         if (response.code() == 200) {
